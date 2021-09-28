@@ -55,8 +55,6 @@ import {
     const getData = async () => {
         const result = await AsyncStorage.getItem('@MarvelStore_Cart')
         if (result !== null) setCart(JSON.parse(result))
-        console.log(result);
-
     }
 
 
