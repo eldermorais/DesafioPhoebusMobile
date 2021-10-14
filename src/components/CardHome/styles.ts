@@ -4,7 +4,6 @@ export const Container = styled.TouchableOpacity`
   align-items: center;
   width: 44%;
   margin-bottom: 16px ;
-  /* flex: 1; */
   `;
 
 export const ImageComic = styled.Image`

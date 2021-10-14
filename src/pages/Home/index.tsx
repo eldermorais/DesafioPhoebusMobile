@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import LogoHeader from '../../assets/MarvelComics.jpg';
 import { ListRenderItem } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
-import Card from '../../components/Card';
+import CardHome from '../../components/CardHome';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { Container, HeaderContainer, HeaderText, Logo, Title, TouchableFilter } from './styles';
 import api from '../../services/api';
 import { useNavigation } from '@react-navigation/core';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export interface Data {
@@ -124,6 +125,37 @@ function Home() {
   const offset = page*limit
   const ts = '1626465261626'
 
+  const arrIndex = []
+    function markComics(){
+      const marked = []
+      const rarity = []
+      const comicsCopy = [...comics]
+
+      function randomInteger(min:number, max:number){
+        return Math.floor(Math.random() * (max - min + 1) + min)
+      }
+      const total = Math.floor(comicsCopy.length * 0.12)
+
+      /* Sempre que a pagina é carregada percorre-se o array de quadrinhos da
+      Api, seleciona aleatoriamente os os quadrinhos raros e coloca somente o
+      id no array marked e posteriormente na sessionStorage*/
+
+      for (let i = 1; i <= total; i++) {
+        const randomIndex = randomInteger(0, comicsCopy.length - 1)
+        const comic = comicsCopy.splice(randomIndex, 1).pop()
+        arrIndex.push(randomIndex)
+        rarity.push(comic)
+        marked.push(comic?.id)
+        AsyncStorage.setItem('@Marvel-Rarity', JSON.stringify(marked))
+
+      }
+
+      return [...marked]
+    }
+
+    const markeds = markComics();
+
+
 
   useEffect(() => {
     loadComics()
@@ -131,7 +163,6 @@ function Home() {
 
   const loadComics = async () => {
     if (loading) return;
-
     setLoading(true)
 
     const response = await api.get(`comics?limit=${limit}&offset=${offset}&ts=${ts}&apikey=${apikey}`)
@@ -140,16 +171,19 @@ function Home() {
     setComics([...comics, ...newsComics])
     setpage(page +1)
     setLoading(false)
-
   }
 
-  const renderItem:ListRenderItem<Comic> = ({ item }) => <Card data={item} onClick={()=> navigation.navigate({name:'Details' as never, params:item as never})} />
+  const renderItem:ListRenderItem<Comic> = ({ item }) =>
+    <CardHome
+      data={item}
+      markeds={markeds}
+      onClick={()=> navigation.navigate({name:'Details' as never, params:item as never})} />
 
 
   return (
     <Container>
       <HeaderContainer>
-        <Logo source={LogoHeader} />
+        <Logo source={LogoHeader} resizeMode="contain" />
         <HeaderText>
           <Title>Quadrinhos</Title>
           <TouchableFilter>
@@ -160,7 +194,6 @@ function Home() {
       <FlatList
       columnWrapperStyle={{flex:1, justifyContent:'space-around'}}
       numColumns={2}
-      // showsHorizontalScrollIndicator={false}
       data={comics}
       renderItem= {renderItem}
       keyExtractor={(item:Comic)  => String(item.id)}

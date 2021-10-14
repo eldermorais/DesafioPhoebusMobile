@@ -3,7 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import { Alert, Button, Text, View } from 'react-native';
-import { useCart } from '../../contexts/CartPovider';
+import Toast from 'react-native-toast-message';
+import { CartStateData, useCart } from '../../contexts/CartPovider';
 import { Comic } from '../Home';
 import {
   Container,
@@ -16,16 +17,14 @@ import {
   InputQtd } from './styles';
 
 
-  function Details() {
+function Details() {
     const [quantity, setQuantity] = useState('0')
     const {params} = useRoute()
     const [comic, setComic] = useState<Comic>(params as Comic)
-    const [cart, setCart] = useState<Number[]>([])
-    const {findCart} = useCart()
+    const {findCart, addToCart} = useCart()
 
 
     useEffect(()=>{
-      getData()
       findCart()
     },[])
 
@@ -36,30 +35,13 @@ import {
       setQuantity(String(Number(quantity)+1))
     }
 
-    const addCart = async () => {
-      const addComic = comic.id
-      if(Number(quantity) > 0){
+    function handleAddToCart(comic: Comic ) : void {
 
-        for(let i = 0; i < Number(quantity); i++){
-
-          const updateCart = [...cart, addComic]
-          setCart(updateCart)
-        }
-
-        await AsyncStorage.setItem('@MarvelStore_Cart',JSON.stringify(cart));
-        findCart()
-      }
-
-    };
-
-    const getData = async () => {
-        const result = await AsyncStorage.getItem('@MarvelStore_Cart')
-        if (result !== null) setCart(JSON.parse(result))
+      addToCart(comic, Number(quantity));
+      Toast.show({type: 'success',
+        text1: 'Item Adicionado ao Carrinho',
+      })
     }
-
-
-
-
 
 
   return (
@@ -81,7 +63,7 @@ import {
 
         </ContainerQtd>
 
-        <Button title="Adicionar ao Carrinho" color="#198754" onPress={()=> addCart()}/>
+        <Button title="Adicionar ao Carrinho" color="#198754" onPress={()=> handleAddToCart(comic)}/>
         <Text style={{fontSize:24, color:'#000', marginHorizontal:16, marginTop:24}}>
           Descrição
         </Text>

@@ -3,7 +3,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from '../pages/Home';
 import Details from '../pages/Details';
-import Cart from '../components/Cart';
+import CartComponent from '../components/CartComponent';
+import Cart from '../pages/Cart';
 
 function Router() {
   const Stack = createStackNavigator();
@@ -15,6 +16,7 @@ function Router() {
       >
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Details" component={Details} />
+        <Stack.Screen name="Cart" component={Cart} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -24,7 +26,7 @@ const screenOptions = {
   headerStyle:{backgroundColor:'#ff1b21',},
   headerTintColor:"#fff",
   headerRight: () => (
-  <Cart />
+  <CartComponent />
   )
 }
 

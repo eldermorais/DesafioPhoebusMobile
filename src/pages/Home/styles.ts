@@ -16,12 +16,12 @@ export const HeaderText = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  /* height: 50px; */
   margin: 16px 8px;
 `;
 
 export const Logo = styled.Image`
   width: 100%;
+  height: 91px;
 `;
 
 export const HeaderContainer = styled.View`
@@ -30,5 +30,5 @@ export const HeaderContainer = styled.View`
   border-bottom-color: #d8d8d8;
 `;
 
-export const TouchableFilter = styled.TouchableOpacity`
-`;
+export const TouchableFilter = styled.TouchableOpacity``;
+
