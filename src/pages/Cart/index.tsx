@@ -68,13 +68,13 @@ function Cart() {
       }
     }
    setprice(newComics.reduce((soma, atual) => soma + atual, 0))
-   console.log(newComics);
 
   }
 
   useEffect(() => {
     totalPrice()
-  }, [price, comics])
+
+  }, [comics])
 
   const renderItem:ListRenderItem<CartStateData> = ({ item }) => (
     <CardCart data={item} />
