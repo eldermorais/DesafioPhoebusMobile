@@ -1,4 +1,4 @@
-# Teste-Front-end-Jr-Phoebus
+# Teste-Mobile-Phoebus
 App de Ecommerce feito com React- Native. Seguindo os requisitos e as orientações recebidas para o desafio.
 
 <br />
